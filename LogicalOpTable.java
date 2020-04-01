@@ -1,7 +1,7 @@
 // a truth table for the logical operators
 
 class LogicalOpTable {
-    public static void main(String arge[]) {
+    public static void main(String args[]) {
 
         boolean p, q;
 
