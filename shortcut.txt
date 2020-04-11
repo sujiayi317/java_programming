@@ -1,0 +1,32 @@
+Next highlighted error: F2 suggestions: alt+enter
+Search class: ctrl + N
+Go to File: ctrl + shift + N
+Find in path: ctrl + shift + F
+Nevigate -> file structure: ctrl +F12         alt + 7 (open windows)
+Navigate--call hierachy: ctrl + alt +H
+Find usages: alt + F7
+rename: shift + F6
+
+generate code: alt + insert
+
+extract -> variable: ctrl + alt + V
+inline variable: ctrl + alt + N
+
+extend selection: ctrl + W
+
+extract -> method: ctrl + alt + M
+extract -> parameter: ctrl + alt + P
+
+
+structure: ctrl +F12         alt + 7 (open windows)
+restore default layout  shift + F12
+delete line: ctrl + y
+move line: ctrl+shift+up/down
+Activite acejump mode: ctrl + :    <--> esc
+
+navigate -> Test: shift + ctrl + T
+navigate -> Test Subject: shift + ctrl + T
+Toggle Line Breakpoint: ctrl + F8 
+the circle on the project panel: "select opened file"
+
+reformat code: ctrl + alt + L
