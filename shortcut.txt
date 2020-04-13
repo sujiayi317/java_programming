@@ -30,3 +30,7 @@ Toggle Line Breakpoint: ctrl + F8
 the circle on the project panel: "select opened file"
 
 reformat code: ctrl + alt + L
+
+Kotlin: 
+Show type of the variable: ctrl + shift + P
+documentation for function: ctrl + Q
