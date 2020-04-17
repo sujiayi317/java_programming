@@ -1,10 +1,12 @@
 package com.JiayiSu.employees;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 import java.util.Random;
 
-public class Employee {
+public class Employee implements Comparable<Employee>, Cloneable{
     // instance fields
     /* Strongly recommend to make all instance fields private. Because having public data fields
      would allow any part of the program to read and modify the instance fields,
@@ -54,7 +56,7 @@ Returns obj if it is not null, or the default object if obj is null.
      its objects. For example, the String class is immutable.)*/
     private String name = "";
     private double salary;
-    private final LocalDate hireDay;
+    private LocalDate hireDay;
 
     /*Every Employee object now has its own id field, but there is only one nextId field that is shared
 among all instances of the class. i.e., If there are 1,000 objects of the Employee
@@ -105,7 +107,7 @@ the class, not to any individual object.*/
         Objects.requireNonNull(name, "The name cannot be null");
         this.name = name;  // "this" denotes the implicit parameter i.e., the object being constructed
         this.salary = 0.0;
-        this.hireDay = LocalDate.of(2000, 1, 1);
+        this.hireDay = LocalDate.of(2000, 1, 1); // LocalDate is immutable
     }
 
     /* If the first statement of a constructor has the form this(. . .), then the constructor calls
@@ -140,6 +142,25 @@ the class, not to any individual object.*/
     is the object of type Employee that appears before the method name. The second parameter, the
     number inside the parentheses after the method name, is an explicit parameter.
     (the implicit parameter a.k.a. the target or receiver of the method call)    */
+
+
+    /**
+     * Change the hire day to several days later.
+     * @param days the decrement days of the hire day
+     */
+    public void decreaseHireDay(long days) {
+        // example of instance field mutation
+        hireDay = hireDay.plusDays(days);
+    }
+
+    public void setHireDay(int year, int month, int day) {
+//        Date newHireDay = new GregorianCalendar(year, month - 1, day).getTime();
+        LocalDate newHireDay = LocalDate.of(year, month, day);
+        // example of instance field mutation
+        hireDay = newHireDay;
+    }
+
+
     public void raiseSalary(double byPercent) {
         double raise = salary * byPercent / 100;
         salary += raise;
@@ -260,6 +281,7 @@ the class, not to any individual object.*/
     public static int getNextId() {
         return nextId; // returns static field
     }
+    // var a = Employee.getNextId();
 
     public void setId() {
         id = nextId;
@@ -344,9 +366,195 @@ the class, not to any individual object.*/
      ---    String getName() ------------
     returns the name of this class.
      ---    Class getSuperclass() ------------
-    returns the superclass of this class as a Class object. */
+    returns the superclass of this class as a Class object.
+
+     The getClass() method in the Object class returns an instance of Class type.
+     If the class is in a package, the package name is part of the class name:
+
+     var generator = new Random();
+     Class cl = generator.getClass();
+     String name = cl.getName(); // name is set to "java.util.Random"
+
+     You can obtain a Class object corresponding to a class name by using the static forName method.
+     String className = "java.util.Random";
+     Class cl = Class.forName(className);
+     Use this method if the class name is stored in a string that varies at runtime. This works if
+     className is the name of a class or interface. Otherwise, the forName method throws a checked
+     exception.
+
+     A third method for obtaining an object of type Class is a convenient shorthand. If T is any Java type
+     (or the void keyword), then T.class is the matching class object. For example:
+     Class cl1 = Random.class; // if you import java.util.*;
+     Class cl2 = int.class;
+     Class cl3 = Double[].class;
+     Note that a Class object really describes a type, which may or may not be a class. For example,
+     int is not a class, but int.class is nevertheless an object of type Class.
+
+     The Class class is actually a generic class. For example, Employee.class is of type Class<Employee>.
+
+     The virtual machine manages a unique Class object for each type. Therefore, you can use the ==
+     operator to compare class objects. For example:
+     if (e.getClass() == Employee.class) . . .
+     This test passes if e is an instance of Employee. Unlike the condition e instanceof
+
+     Caution
+     For historical reasons, the getName method returns somewhat strange names for array types:
+     Double[].class.getName()   returns "[Ljava.lang.Double;".
+     int[].class.getName()   returns "[I".
+
+
+     If you have an object of type Class, you can use it to construct instances of the class. Call the
+     getConstructor method to get an object of type Constructor, then use the newInstance
+     method to construct an instance. For example:
+     var className = "java.util.Random"; // or any other name of a class with a no-arg constructor
+     Class cl = Class.forName(className);
+     Object obj = cl.getConstructor().newInstance();
+     If the class doesn’t have a constructor without arguments, the getConstructor method throws an
+     exception.
+    */
     public String toString() {
         return getClass().getName() + "[name=" + name + ", salary=" + salary +
                 ", hireDay="+ hireDay + "]";
+    }
+
+    /* Caution:
+    In the interface declaration, the compareTo method was not declared public because all
+    methods in an interface are automatically public. However, when implementing the interface,
+    you must declare the method as public. Otherwise, the compiler assumes that the method
+    has package access—the default for a class. The compiler then complains that you’re trying
+    to supply a more restrictive access privilege.
+
+    Tip:
+    The compareTo method of the Comparable interface returns an integer. If the objects are
+    not equal, it does not matter what negative or positive value you return. This flexibility can
+    be useful when you are comparing integer fields. For example, suppose each employee has a
+    unique integer id and you want to sort by the employee ID number. Then you can simply
+    return id - other.id. That value will be some negative value if the first ID number is
+    less than the other, 0 if they are the same ID, and some positive value otherwise. However,
+    there is one caveat: The range of the integers must be small enough so that the subtraction
+    does not overflow. If you know that the IDs are not negative or that their absolute value is at
+    most (Integer.MAX_VALUE - 1) / 2, you are safe. Otherwise, call the static
+    Integer.compare method.
+    Of course, the subtraction trick doesn’t work for floating-point numbers. The difference
+    salary - other.salary can round to 0 if the salaries are close together but not
+    identical. The call Double.compare(x, y) simply returns -1 if x < y or 1 if x >
+    y.
+
+    Note:
+    The documentation of the Comparable interface suggests that the compareTo method
+    should be compatible with the equals method. That is, x.compareTo(y) should be
+    zero exactly when x.equals(y). Most classes in the Java API that implement
+    Comparable follow this advice. A notable exception is BigDecimal. Consider x =
+    new BigDecimal("1.0") and y = new BigDecimal("1.00"). Then
+    x.equals(y) is false because the numbers differ in precision. But
+    x.compareTo(y) is zero. Ideally, it shouldn’t be, but there was no obvious way of
+    deciding which one should come first.
+
+    Q: why can’t the Employee class simply provide a compareTo method without
+    implementing the Comparable interface?
+    A: The reason for interfaces is that the Java programming language is strongly typed. When making a
+    method call, the compiler needs to be able to check that the method actually exists. Somewhere in the
+    sort method will be statements like this:
+    if (a[i].compareTo(a[j]) > 0) {
+        // rearrange a[i] and a[j]
+        . . .
+    }
+    The compiler must know that a[i] actually has a compareTo method. If a is an array of
+    Comparable objects, then the existence of the method is assured because every class that
+    implements the Comparable interface must supply the method.
+
+
+    java.lang.Comparable<T> -----------------------------------------
+    int compareTo(T other)
+        compares this object with other and returns a negative integer if this object is less than
+        other, zero if they are equal, and a positive integer otherwise.
+    java.util.Arrays  -----------------------------------------
+    static void sort(Object[] a)
+        sorts the elements in the array a. All elements in the array must belong to classes that implement
+        the Comparable interface, and they must all be comparable to each other.
+    java.lang.Integer  -----------------------------------------
+    static int compare(int x, int y)
+        returns a negative integer if x < y, zero if x and y are equal, and a positive integer otherwise.
+    java.lang.Double  -----------------------------------------
+    static int compare(double x, double y)
+        returns a negative integer if x < y, zero if x and y are equal, and a positive integer otherwise.
+    */
+    /**
+     * Compares employees by salary, this and other should be in the same class
+     * @param other another Employee object
+     * @return a negative value if this employee has a lower salary than
+     * otherObject, 0 if the salaries are the same, a positive value otherwise
+     */
+    public int compareTo(Employee other) {
+        int result = 0;
+        // a quick test to see if the objects are identical
+        if (this != other) {
+            if (other == null) throw new NullPointerException();
+            if (getClass() != other.getClass())
+                throw new ClassCastException(); // if the classes don't match, they can't compare
+            result = Double.compare(salary, other.salary); // now, compare their salaries
+        }
+        return result;
+    }
+
+    /*
+    var original = new Employee("John Public", 50000);
+    Employee copy = original;
+    copy.raiseSalary(10); // oops--also changed original
+
+    If you would like copy to be a new object that begins its life being identical to original but
+    whose state can diverge over time, use the clone method.
+
+    Employee copy = original.clone();
+    copy.raiseSalary(10); // OK--original unchanged
+
+    But it isn’t quite so simple. The clone method is a protected method of Object, which means
+    that your code cannot simply call it. Only the Employee class can clone Employee objects. There
+    is a reason for this restriction. Think about the way in which the Object class can implement
+    clone. It knows nothing about the object at all, so it can make only a field-by-field copy. If all data
+    fields in the object are numbers or other basic types, copying the fields is just fine. But if the object
+    contains references to subobjects, then copying the field gives you another reference to the same
+    subobject, so the original and the cloned objects still share some information.
+
+    The default cloning operation is “shallow”—it doesn’t clone objects that are
+    referenced inside other objects.
+
+    Quite frequently, however, subobjects are mutable, and you must redefine the clone method to make
+    a deep copy that clones the subobjects as well. In our example, the hireDay field is a Date, which
+    is mutable, so it too must be cloned.
+
+    For every class, you need to decide whether
+    1. The default clone method is good enough;
+    2. The default clone method can be patched up by calling clone on the mutable subobjects; or
+    3. clone should not be attempted.
+    The third option is actually the default. To choose either the first or the second option, a class must
+    1. Implement the Cloneable interface; and
+    2. Redefine the clone method with the public access modifier.
+
+    In this case, the appearance of the Cloneable interface has nothing to do with the normal use of
+    interfaces. In particular, it does not specify the clone method—that method is inherited from the
+    Object class. The interface merely serves as a tag, indicating that the class designer understands the
+    cloning process. Objects are so paranoid about cloning that they generate a checked exception if an
+    object requests cloning but does not implement that interface.
+    Note
+
+    Note:
+    The Cloneable interface is one of a handful of tagging interfaces that Java provides.
+    (Some programmers call them marker interfaces.) Recall that the usual purpose of an
+    interface such as Comparable is to ensure that a class implements a particular method or
+    set of methods. A tagging interface has no methods; its only purpose is to allow the use of
+    instanceof in a type inquiry:
+        if (obj instanceof Cloneable) . . .
+    We recommend that you do not use tagging interfaces in your own programs. */
+    // public access, change return type
+    public Employee clone() throws CloneNotSupportedException
+    {
+        // call Object.clone()
+        Employee cloned = (Employee) super.clone();
+
+        // clone mutable fields
+//        cloned.hireDay = (Date) hireDay.clone();
+
+        return cloned;
     }
 }
