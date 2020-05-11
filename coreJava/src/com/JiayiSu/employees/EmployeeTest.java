@@ -270,6 +270,27 @@ class EmployeeTest {
         staff3.add(new Employee("Harry Hacker", 50000, 1989, 10, 1));
         staff3.add(new Employee("Tony Tester", 40000, 1990, 3, 15));
 
+        /* If you want to sort
+        the list in some other way, you can use the sort method of the List interface and pass a
+        Comparator object. Here is how you can sort a list of employees by salary:
+        staff3.sort(Comparator.comparingDouble(Employee::getSalary));
+
+        If you want to sort a list in descending order, use the static convenience method
+        Comparator.reverseOrder(). It returns a comparator that returns b.compareTo(a). For
+        example,
+        staff3.sort(Comparator.reverseOrder())
+        sorts the elements in the list staff in reverse order, according to the ordering given by the
+        compareTo method of the element type. Similarly,
+        staff3.sort(Comparator.comparingDouble(Employee::getSalary).reversed())
+        sorts by descending salary. */
+        staff3.sort(Comparator.comparing(Employee::getSalary).reversed());
+        System.out.println("Staff3 sorted a fourth time according to the salary reversed:*********-----------");
+        for (Employee ep : staff3) {
+            ep.setId();
+            System.out.println("name=" + ep.getName() + ",id=" + ep.getId() + ",salary="
+                    + ep.getSalary());
+        }
+
         // raise everyone's salary by 5%
         for (Employee e3 : staff3)
             e3.raiseSalary(5);

@@ -1,0 +1,5 @@
+The **git remote add origin** command will associate our local repository with the remote GitHub repository that we just created.  We're essentially telling your Git repo that we have a URL we want it to know about, and we give it the name "origin".  You do not have to name the remote "origin" but it is standard if you only have a single remote.
+
+The **git push** command will then push our local Git repository code to the remote GitHub repository (if you chose a public repository, this will publish your code on the internet - via GitHub).
+
+Therefore, switch back to your local terminal and run the specified commands from your project folder:
